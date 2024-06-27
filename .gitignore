@@ -178,7 +178,6 @@ rabbitmq
 *.sqlite
 
 /volumes/queries/
-/volumes/configs/
 /volumes/neo4j_import/
 /volumes/scripts/
 !/volumes/queries/examples/**/*
