@@ -176,8 +176,3 @@ rabbitmq
 /testing/dataset.json 
 
 *.sqlite
-
-/volumes/queries/
-/volumes/neo4j_import/
-/volumes/scripts/
-!/volumes/queries/examples/**/*

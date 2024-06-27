@@ -1,0 +1,18 @@
+// Step 1: Collect all Code nodes and Commit nodes related to Code nodes
+MATCH (c:Commit)-[:MEMBER_OF]->(code:Code)
+MATCH (c)--(d:Developer)
+MATCH (c)--(b:Branch)
+MATCH (b)--(r:Repository)
+WITH COLLECT(c) AS commitNodes, COLLECT(code) AS codeNodes, 
+COLLECT(d) as devNodes, COLLECT(b) as branchNodes, COLLECT(r) as repositoryNodes
+
+// Step 2: Find all nodes that are not in the list of nodes to keep
+MATCH (n)
+WHERE NOT n IN commitNodes 
+AND NOT n IN codeNodes 
+AND NOT n IN devNodes
+AND NOT n IN branchNodes
+AND NOT n IN repositoryNodes
+
+// Step 3: Delete the nodes
+DETACH DELETE n;

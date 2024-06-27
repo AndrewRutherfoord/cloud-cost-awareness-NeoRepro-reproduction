@@ -1,0 +1,3 @@
+MATCH (commit:Commit)--(code:Code) WHERE code.name contains "storage"
+MATCH (commit)--(dev:Developer)
+RETURN commit.message as commit_message, dev.email as developer, code.name as code
