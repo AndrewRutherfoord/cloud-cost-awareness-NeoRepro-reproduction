@@ -1,10 +1,17 @@
-# Graph DB MSR Tool
+# Cloud Cost Awareness - Replication Package
 
-A tool for mining software repositories and creating replication packages using a Neo4j Graph Database. This tool aims to do 3 things:
+This repository contains supplementary material for the paper entitled:
 
-- Reduce scripting effort for drilling repository data
-- Provide a simple interface for querying drilled data
-- Allow easily creating a replication package which can be distrubted
+**Mining Cost Awareness in the Deployments of Cloud-based Applications**
+
+All data in this package originally comes from <https://github.com/feitosa-daniel/cloud-cost-awareness>
+This replication package only contains the data for commits.
+
+Once you run the application you will find:
+
+- Configuration files that were used to drill the original Repository Data into the Neo4j Database
+- Database dumps at different stages of the study which can be loaded and queried
+- Scripts to load the labelled dataset onto Neo4j
 
 ## Executing the Project
 
@@ -30,21 +37,33 @@ chmod -R 775 volumes/neo4j_import/
 
 4. Navigate to <http://localhost:5173/>
 
-## 3 Operating Modes
+## The drill configurations
 
-This application can be used in 3 different ways, catering to different use cases.
+The drilling of the repositories can be replicated by navigating to <http://localhost:5173/editor> opening the `cost_awareness_488.yaml` config file in the left bad and clicking execute.
 
-### 1. Interacting with an existing reproduction dataset
+Performing the drill job will take some time so please be patient. You can track the progress of the drill in <http://localhost:5173/jobs> .
 
-If you are here to interact with a replication package that was created by a line of research.
+## Using the Database Dumps
 
-### 2. Reproduce a study using the replication package
+We reccomend you use a one of the database dumps so you don't need to re-drill the original source repositores. Do the following:
 
-TODO: Write this section
+1. Navigate to <http://localhost:5173/manage-database>
+2. In the database images section, click load on the image you wish to use. Each image is at a different stage in the process:
 
-### 3. Create a new study
+- `cost_awareness_full.cypher` - All of the raw drilled data. This will take **over an hour to load**
+- `cost_awareness_full_labelled.cypher` - All of the drilled data with the commit message labels added.
+- `cost_awareness_pruned_labelled.cypher` - Just the relevant commits and their labels. This loads quickly.
 
-TODO: Write this section
+3. Navigate to <http://localhost:5173/query> where you can query the data using the Neo4j Cypher Query Language
+
+## Queries from the study
+
+To perform the queries that were used during the study, navigate to <http://localhost:5173/query>
+On the left bar, open the query you wish to run. There are a few to choose from:
+
+- `example` - The queries in this folder are to give you an idea of how the query language works
+
+# Using the original Tool
 
 ## Configuring a Repository Drill
 
