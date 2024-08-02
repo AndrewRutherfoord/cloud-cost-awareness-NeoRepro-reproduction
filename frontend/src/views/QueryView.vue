@@ -210,6 +210,7 @@ async function saveQuery() {
   } else if (response.status === 201) {
     toast.success("Updated saved query file.")
   }
+  await getQueryFiles()
 
   currentFile.value = filename;
   savedContent.value = content.value;

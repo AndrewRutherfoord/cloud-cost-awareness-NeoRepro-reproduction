@@ -1,6 +1,7 @@
 volumes:
   neo4j:
   rabbitmq:
+
 services:
   neo4j:
     container_name: neo4j
@@ -70,7 +71,7 @@ services:
       dockerfile: ./backend/Dockerfile
     env_file: .env
     environment:
-      - RABBITMQ_HOST=localhost
+      - RABBITMQ_HOST=localhost # Override .env file since RABBITMQ requires localhost
     network_mode: host
     volumes:
       - ./backend/:/app/backend/ # For Development

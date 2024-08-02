@@ -1,0 +1,1 @@
+MATCH (l:Code)--(c:Commit) RETURN l.name as Name, count(c) as Num_Commits ORDER BY Num_Commits DESC

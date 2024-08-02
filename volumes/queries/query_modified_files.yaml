@@ -1,0 +1,1 @@
+MATCH (f:File)-[m:MODIFIED]-(c:Commit) RETURN f.name, m.added_lines, m.deleted_lines, c.message

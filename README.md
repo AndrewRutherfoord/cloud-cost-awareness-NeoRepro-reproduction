@@ -13,9 +13,12 @@ Once you run the application you will find:
 - Database dumps at different stages of the study which can be loaded and queried
 - Scripts to load the labelled dataset onto Neo4j
 
+> **Note**: This application is designed to be run on a local machine. No considerations of network
+> security were made for public accessibility.
+
 ## Executing the Project
 
-This project is built with docker and must be run with docker:
+This project is built with Docker and must be run with Docker Compose:
 
 1. Copy env from example:
 
@@ -35,17 +38,18 @@ docker compose up -d
 chmod -R 775 volumes/neo4j_import/
 ```
 
-4. Navigate to <http://localhost:5173/>
+4. Navigate to <http://localhost:5173/>. (Use localhost, not 127.0.0.1 due to some issues on frontend.)
 
-## The drill configurations
+5. Navigate to http://localhost:5173/manage-database to load a dataset into Neo4j. Select
+   `3_cost_awareness_labelled_shrunk.cypher` for the smallest pre-labelled dataset. This will take a
+   few seconds to load. The earlier datasets are much larger. Expect upwards of 30 minutes to load
+   them. See following section.
 
-The drilling of the repositories can be replicated by navigating to <http://localhost:5173/editor> opening the `cost_awareness_488.yaml` config file in the left bad and clicking execute.
-
-Performing the drill job will take some time so please be patient. You can track the progress of the drill in <http://localhost:5173/jobs> .
+6. Navigate to <http://locahost:5173/query> to use the queries and write your own.
 
 ## Using the Database Dumps
 
-We reccomend you use a one of the database dumps so you don't need to re-drill the original source repositores. Do the following:
+We recommend you use a one of the database dumps so you don't need to re-drill the original source repositories. Do the following:
 
 1. Navigate to <http://localhost:5173/manage-database>
 2. In the database images section, click load on the image you wish to use. Each image is at a different stage in the process:
@@ -56,14 +60,31 @@ We reccomend you use a one of the database dumps so you don't need to re-drill t
 
 3. Navigate to <http://localhost:5173/query> where you can query the data using the Neo4j Cypher Query Language
 
+## The drill configurations
+
+The drilling of the repositories can be replicated by navigating to <http://localhost:5173/editor>
+opening the `cost_awareness_488.yaml` config file in the left bar and clicking execute. This will
+execute the drill jobs with the 3 driller workers that are set up by default. 
+
+Performing the drill job will take some time so please be patient. You can track the progress of the drill in <http://localhost:5173/jobs> .
+
+If you wish to increase the number of driller worker instances that are being used to perform the
+drills, change line that says `replicas: 3` by replacing the 3 with the number of notes you want.
+
 ## Queries from the study
 
 To perform the queries that were used during the study, navigate to <http://localhost:5173/query>
-On the left bar, open the query you wish to run. There are a few to choose from:
+On the left bar, open the query you wish to run. You can then execute the query throught the
+interface. There are a few queries to choose from:
 
-- `example` - The queries in this folder are to give you an idea of how the query language works
+- `example` - Folder of example queries to give you an idea of how the query language works
 
-# Using the original Tool
+# NeoRepro Documentation
+
+This replication package is created using NeoRepro, a tool for performing an MSR study and creating
+a replication package for it. NeoRepro is centered around the Neo4j graph database in order to
+create a unified storage system where data can be efficiently queried using the Neo4j Cypher query
+language.
 
 ## Configuring a Repository Drill
 
@@ -180,20 +201,3 @@ CALL apoc.import.cypher.all("all.cypher")
 - I'm here to access the data
 - I'm here to replicate the study
 - I'm here to create a replication package
-
-## Outline
-
-- Intro
-- Related Works
-  - Say here why not using GraphRepo
-- Case Study - Looking at cost awareness
-  - REquirements go here.
-- Design (& IMplementation)
-- Evaluation
-
-  - Show that fulfilled requirements
-
-- Discussion (explain limitations)
-  - Lessons learned
-- COnclusions
-  - THis is how we answered the RQs
