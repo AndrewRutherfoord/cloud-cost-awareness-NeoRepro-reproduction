@@ -88,12 +88,13 @@ language.
 
 ## Configuring a Repository Drill
 
-With the drilling yaml configuration you can extract data from a list of Git repositories. The schema is made up of two primary sections:
+With the drilling yaml configuration you can extract data from a list of Git repositories. In the
+tool you will find an example drill configuration. The schema is made up of two primary sections:
 
 - `defaults`: Object containing default values which are used for each drill job.
 - `repositores`: List of repositories to be drilled and the configuration for that drill. If a configuration is set in the `defaults` section but not in the individual configuration, then the default is applied.
 
-Here is an example configuration from the Mining Cost awareness case study:
+Here is a snippet of a configuration from the Mining Cost awareness case study (https://github.com/AndrewRutherfoord/cloud-cost-awareness-NeoRepro-reproduction):
 
 ```YAML
 defaults:
@@ -175,28 +176,30 @@ Each repository can contain all of the fields from `defaults` but must also cont
 
 If any values are not provided in the repository, the default values from `defaults` will be used.
 
-## Working with Neo4j
+### Executing the drill job
 
-### Exporting the Database
+Once the drill configuration file has been composed on the frontend of NeoRepro, the `Execute`
+button on the Drill configration page can be clicked in order to commence the drilling of the
+repositories based on the configuration file.
 
-Exports the database to a file in the `import` directory of Neo4j.
+To view the status of the drill jobs, navigate to the job status page of the frontend. Here you can
+see which repositories are being drilled currenly, which are pending, which have failed and which
+are complete.
 
-```
-CALL apoc.export.cypher.all("all.cypher", {
-    format: "cypher-shell",
-    useOptimizations: {type: "UNWIND_BATCH", unwindBatchSize: 20}
-})
-YIELD file, batches, source, format, nodes, relationships, properties, time, rows, batchSize
-RETURN file, batches, source, format, nodes, relationships, properties, time, rows, batchSize;
-```
+The time taken to drill will vary widely depending on the configurations set earlier and the number
+of Driller Workers that are running. By default NeoRepro has 3 Driller Workers running which will
+drill 3 repositories simultaneously. If your computer can handle it, you can increase this by
+changing the number of `replicas` in the Docker Compose file.
 
-### Importing the Database
+## Querying the dataset with Neo4j
 
-```
-CALL apoc.import.cypher.all("all.cypher")
-```
+Once the drilling is complete, all of the repository data will be contained in the Neo4j Graph
+Database. The Cypher query language (https://neo4j.com/docs/cypher-manual/current/introduction/) can
+be used to query the data. There are some example queries pre-populated in NeoRepro.
 
-## Use cases
+To query the dataset, navigate to http://localhost:5173/query . Saved queries can be found on the
+left side. You can compose a new query by writing in the query box at the top of the page. Hitting
+execute will send the query to the Neo4j and the response will be shown just below the query box.
 
 - I'm here to access the data
 - I'm here to replicate the study

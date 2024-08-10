@@ -7,8 +7,8 @@ from fastapi.middleware.cors import CORSMiddleware
 import logging
 
 
-from backend.drill_queue_rpc import RabbitMessageQueueRPC, RepositoryDrillerClient
-from backend.routers import driller_router, files, job_statuses
+from src.drill_queue_rpc import RabbitMessageQueueRPC, RepositoryDrillerClient
+from src.routers import driller_router, files, job_statuses
 
 logger = logging.getLogger(__name__)
 
@@ -64,15 +64,20 @@ async def lifespan(app: FastAPI):
     # Disconnect the queue on teardown.
     await teardown_jobs_queue()
 
-
+# Instantiate app with global dependency injection and the lifespan
+# `get_client` adds the Rabbit MQ RPC instance to the request object
 app = FastAPI(dependencies=[Depends(get_client)], lifespan=lifespan)
 
+# Attach the routers to the FastAPI App
 app.include_router(driller_router.router)
 app.include_router(files.router)
 app.include_router(job_statuses.router)
 
+# Allow the Vue JS frontend to access the backend. 
+# Default port is 5173 but can be set in environment file.
 origins = [
-    "http://localhost:5173",
+    f"http://localhost:{os.environ.get('FRONTEND_PORT', 5173)}",
+    f"http://127.0.0.1:{os.environ.get('FRONTEND_PORT', 5173)}"
 ]
 
 # Very open CORS. Stricter not necessary since app won't be deployed.
@@ -87,4 +92,5 @@ app.add_middleware(
 
 @app.get("/healthcheck")
 def get_healthcheck():
+    """Endpoint to use to check backend life."""
     return "OK"

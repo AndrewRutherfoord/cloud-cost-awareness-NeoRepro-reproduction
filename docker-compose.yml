@@ -77,8 +77,8 @@ services:
       - ./backend/:/app/backend/ # For Development
       - ./common/:/app/common/ # For Development
 
-      - ./volumes/queries:/app/backend/queries # Location of Cypher Queries
-      - ./volumes/configs:/app/backend/configs # Location of Drill Config Files
+      - ./volumes/queries:/app/queries # Location of Cypher Queries
+      - ./volumes/configs:/app/configs # Location of Drill Config Files
       - ./volumes/neo4j_import/:/app/neo4j_import/
     depends_on:
       neo4j:
@@ -89,7 +89,7 @@ services:
   frontend:
     container_name: frontend
     ports:
-      - 5173:5173
+      - ${FRONTEND_PORT}:5173
     build:
       context: ./
       dockerfile: ./frontend/Dockerfile
